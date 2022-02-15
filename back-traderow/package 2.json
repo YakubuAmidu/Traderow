@@ -1,0 +1,7 @@
+{
+  "name": "Traderow",
+  "version": "1.0.0",
+  "description": "E-commerce online shop",
+  "main": "index.js",
+  "license": "MIT"
+}
