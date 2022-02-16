@@ -25,6 +25,7 @@ const ProductContainer = () => {
              renderItem={({ item }) => <ProductList key={item.id} item={item}/>}
              keyExtractor={item => item.name}
              numColumns={2}
+             showsVerticalScrollIndicator={false}
             />
             </View>
         </View>
