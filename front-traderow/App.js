@@ -1,4 +1,12 @@
-import { StyleSheet, LogBox, View } from 'react-native';
+import { LogBox } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native'
+
+// Redux
+import { Provider } from 'react-redux';
+import store from './Redux/Store';
+
+// Navigators
+import Main from './Navigators/Main';
 
 // Screenst
 import Header from './Shared/Header';
@@ -8,19 +16,13 @@ import ProductContainer from './Screens/Products/ProductContainer';
 
 export default function App() {
   return (
-    <View style={styles.container}>
+    <Provider store={store}>
+      <NavigationContainer>
       <Header />
-      <ProductContainer />
-    </View>
+      <Main />
+    </NavigationContainer>
+    </Provider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 

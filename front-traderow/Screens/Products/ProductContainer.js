@@ -1,27 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, TextInput, Icon } from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
+import { StyleSheet, Text, View, FlatList, TextInput, ScrollView, Icon, Dimensions } from 'react-native';
 
 
 import ProductList from './ProductList';
 import SearchedProducts from './SearchedProducts';
+import Banner from '../../Shared/Banner';
+import CategoryFilter from './CategoryFilter';
+
+var { height } = Dimensions.get('window');
 
 const data = require('../../assets/data/product.json');
+const productsCategories = require('../../assets/data/categories.json');
 
-const ProductContainer = () => {
+const ProductContainer = (props) => {
     const [products, setProducts] = useState([]);
     const [productsFiltered, setProductsFiltered] = useState([]);
     const [focus, setFocus] = useState();
+    const [categories, setCategories] = useState([]);
+    const [productsCtg, setProductsCtg] = useState([]);
+    const [active, setActive] = useState();
+    cosnt [initialState, setInitialState] = useState([]);
 
     useEffect(() => {
         setProducts(data);
         setProductsFiltered(data);
         setFocus(false);
+        setCategories(productsCategories);
+        setProductsCtg(data);
+        setActive(-1);
+        setInitialState(data);
 
         return () => {
             setProducts([]);
             setProductsFiltered([]);
             setFocus();
+            setCategories([]);
+            setActive();
+            setInitialState();
         }
     }, []);
 
@@ -40,9 +55,22 @@ const ProductContainer = () => {
         setFocus(false);
     }
 
+    const changeCtg = (ctg) => {
+           {
+               ctg === 'all' 
+               ? [setProductsCtg(initialState), active(true)]
+               : [
+                   setProductsCtg(
+                       products.filter((i) => i.category._id == ctg),
+                       setActive(true)
+                   )
+               ]
+           }
+    }
+
 
     return (
-               <View style={styles.container}>
+               <View style={styles.searchContainer}>
                    <View style={styles.input}>
                    <AntDesign name="search1" size={26} color="black" style={{ paddingLeft: 5 }} />
                    <TextInput 
@@ -60,18 +88,45 @@ const ProductContainer = () => {
                    {
                        focus == true ? (
                            <SearchedProducts 
+                            navigation={props.navigation}
                            productsFiltered={productsFiltered}
                            />
                        ) : (
-                        <View style={styles.listContainer}>
-                        <FlatList 
-                         data={products}
-                         renderItem={({ item }) => <ProductList key={item.brand} item={item}/>}
-                         keyExtractor={item => item.brand}
-                         numColumns={2}
-                         showsVerticalScrollIndicator={false}
-                        />
+                        <ScrollView>
+                          <View>
+                        <View>
+                          <Banner />
                         </View>
+                        <View>
+                            <CategoryFilter
+                             categories={categories}
+                             CategoryFilter={changeCtg}
+                             productsCtg={productsCtg}
+                             active={active}
+                             setActive={setActive}
+                            />
+                        </View>
+                        {
+                            productsCtg.length > 0 ? (
+                        <View style={styles.listContainer}>
+                        {
+                            productsCtg.map((item) => {
+                                <ProductList
+                                    navigation={props.navigation}
+                                   key={item._id}
+                                   item={item}
+                                />
+                            })
+                        }
+                        </View> 
+                            ) : (
+                                <View style={[styles.center, { height: height / 2 }]}>
+                                       <Text>No products found</Text>
+                                    </View>
+                            )
+                            }
+                        </View>
+                        </ScrollView>
                        )
                    }
         </View>
@@ -79,7 +134,7 @@ const ProductContainer = () => {
 }
 
 const styles = StyleSheet.create({
-    container: {
+    searchContainer: {
         flexWrap: 'wrap',
         backgroundColor: 'gainsboro',
     },
@@ -93,10 +148,14 @@ const styles = StyleSheet.create({
      fontSize: 20
     },
     listContainer: {
-        width: '100%',
+        height: height,
         flex: 1,
         flexDirection: 'row',
         alignItems: 'flex-start'
+    },
+    center: {
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
 
