@@ -5,6 +5,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import FormContainer from "../../../Shared/Form/FormContainer";
 import Input from "../../../Shared/Form/Input";
 import { keyBaordAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+import { connect } from "react-redux";
+
+import countries from "../../../assets/data/countries.json";
 import { add } from "react-native-reanimated";
 
 const Checkout = (props) => {
@@ -23,6 +27,20 @@ const Checkout = (props) => {
       setOrderItems();
     };
   }, []);
+
+  const checkout = (props) => {
+    let order = {
+      orderItems,
+      city,
+      country,
+      phone,
+      address1: address,
+      address2: address2,
+      dateOrdered: Date.now(),
+    };
+
+    props.navigation.navigate("Payment", { order: order });
+  };
 
   return (
     <keyBaordAwareScrollView
@@ -75,8 +93,36 @@ const Checkout = (props) => {
         keyboardType={"numeric"}
         onChangeText={(text) => setZip(text)}
       />
+
+      <Item picker>
+        <Picker
+          mode="dropdown"
+          iosIcon={<Icon name="arrow-down" color={"#007aff"} />}
+          style={{ width: undefined }}
+          selectValue={country}
+          placeholder="select your country"
+          placeholderStyle={{ color: "#007aff" }}
+          placeholderIconColor="#007aff"
+          onValueChange={(e) => setCountry(e)}
+        >
+          {countries.map((c) => {
+            return <Picker.Item key={c.code} label={c.name} value={c.name} />;
+          })}
+        </Picker>
+      </Item>
+      <View style={{ width: "80%", alignItems: "center" }}>
+        <Button title="confirm" onPress={() => checkout()} />
+      </View>
     </keyBaordAwareScrollView>
   );
 };
 
-export default Checkout;
+const mapStateToProps = (state) => {
+  const { cartItems } = state;
+
+  return {
+    cartItems: cartItems,
+  };
+};
+
+export default connect(mapStateToProps)(Checkout);
