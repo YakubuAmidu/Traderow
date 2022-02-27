@@ -1,11 +1,87 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, Button } from "react-native";
+import {
+  Item,
+  Picker,
+  View,
+  Container,
+  Text,
+  Header,
+  Content,
+  Left,
+  Right,
+  Body,
+  Title,
+  Icon,
+  Radio,
+  ListItem,
+} from "native-base";
 
-const Payment = () => {
+const methods = [
+  { name: "Cash on delivery", value: 1 },
+  { name: "Bank transfer", value: 2 },
+  { name: "Card payment", value: 3 },
+];
+
+const paymentCards = [
+  { name: "Wallet", value: 1 },
+  { name: "Visa", value: 2 },
+  { name: "MasterCard", value: 3 },
+  { name: "Other", value: 4 },
+];
+
+const Payment = (props) => {
+  const order = props.route.params;
+
+  const [selected, setSelected] = useState();
+  const [card, setCard] = useState();
+
   return (
-    <View>
-      <Text>Payment</Text>
-    </View>
+    <Container>
+      <Header>
+        <Body>
+          <title>Choose your payment method</title>
+        </Body>
+      </Header>
+
+      <Content>
+        {methods.map((item, index) => {
+          return (
+            <ListItem key={item.name} onPress={() => setSelected(item.value)}>
+              <Left>
+                <Text>{item.name}</Text>
+              </Left>
+              <Right>
+                <Radio selected={selected == item.value} />
+              </Right>
+            </ListItem>
+          );
+        })}
+
+        {selected == 3 ? (
+          <Picker
+            mode="dropdown"
+            iosIcon={<Icon name="arrrow-down" />}
+            headerStyle={{ backgroundColor: "orange" }}
+            headerBackButtonTextStyle={{ color: "#fff" }}
+            headerTitleStyle={{ color: "#fff" }}
+            selectedValue={card}
+            onValueChange={(x) => setCard(x)}
+          >
+            {paymentCards.map((c, index) => {
+              return <Picker.Item key={c.name} label={c.name} value={c.name} />;
+            })}
+          </Picker>
+        ) : null}
+
+        <View style={{ marginTop: 60, alignSelf: "centrer" }}>
+          <Button
+            title={"Confirm"}
+            onPress={() => props.navigation.navigate("Confirm", { order })}
+          />
+        </View>
+      </Content>
+    </Container>
   );
 };
 
