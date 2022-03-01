@@ -7,6 +7,7 @@ import {
   TextInput,
   ScrollView,
   Icon,
+  ActivityIndicator,
   Dimensions,
 } from "react-native";
 import { useFocusEffect } from "react-navigation/native";
@@ -28,6 +29,7 @@ const ProductContainer = (props) => {
   const [productsCtg, setProductsCtg] = useState([]);
   const [active, setActive] = useState();
   cosnt[(initialState, setInitialState)] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     useCallback(() => {
@@ -39,6 +41,7 @@ const ProductContainer = (props) => {
           setProductsFiltered(res.data);
           setProductsCtg(res.data);
           initialState(res.data);
+          setLoading(false);
         })
         .catch((err) => {
           console.log("API Error...😔");
@@ -94,61 +97,70 @@ const ProductContainer = (props) => {
   };
 
   return (
-    <View style={styles.searchContainer}>
-      <View style={styles.input}>
-        <AntDesign
-          name="search1"
-          size={26}
-          color="black"
-          style={{ paddingLeft: 5 }}
-        />
-        <TextInput
-          placeholder="Search"
-          style={styles.textInput}
-          onFocus={openList}
-          onChangeText={(text) => searchProduct(text)}
-        />
-        {focus == true ? <Icon onPress={onBlur} name="ios-close" /> : null}
-      </View>
-      {focus == true ? (
-        <SearchedProducts
-          navigation={props.navigation}
-          productsFiltered={productsFiltered}
-        />
-      ) : (
-        <ScrollView>
-          <View>
-            <View>
-              <Banner />
-            </View>
-            <View>
-              <CategoryFilter
-                categories={categories}
-                CategoryFilter={changeCtg}
-                productsCtg={productsCtg}
-                active={active}
-                setActive={setActive}
-              />
-            </View>
-            {productsCtg.length > 0 ? (
-              <View style={styles.listContainer}>
-                {productsCtg.map((item) => {
-                  <ProductList
-                    navigation={props.navigation}
-                    key={item._id}
-                    item={item}
-                  />;
-                })}
-              </View>
-            ) : (
-              <View style={[styles.center, { height: height / 2 }]}>
-                <Text>No products found</Text>
-              </View>
-            )}
+    <>
+      {loading == false ? (
+        <View style={styles.searchContainer}>
+          <View style={styles.input}>
+            <AntDesign
+              name="search1"
+              size={26}
+              color="black"
+              style={{ paddingLeft: 5 }}
+            />
+            <TextInput
+              placeholder="Search"
+              style={styles.textInput}
+              onFocus={openList}
+              onChangeText={(text) => searchProduct(text)}
+            />
+            {focus == true ? <Icon onPress={onBlur} name="ios-close" /> : null}
           </View>
-        </ScrollView>
+          {focus == true ? (
+            <SearchedProducts
+              navigation={props.navigation}
+              productsFiltered={productsFiltered}
+            />
+          ) : (
+            <ScrollView>
+              <View>
+                <View>
+                  <Banner />
+                </View>
+                <View>
+                  <CategoryFilter
+                    categories={categories}
+                    CategoryFilter={changeCtg}
+                    productsCtg={productsCtg}
+                    active={active}
+                    setActive={setActive}
+                  />
+                </View>
+                {productsCtg.length > 0 ? (
+                  <View style={styles.listContainer}>
+                    {productsCtg.map((item) => {
+                      <ProductList
+                        navigation={props.navigation}
+                        key={item._id}
+                        item={item}
+                      />;
+                    })}
+                  </View>
+                ) : (
+                  <View style={[styles.center, { height: height / 2 }]}>
+                    <Text>No products found</Text>
+                  </View>
+                )}
+              </View>
+            </ScrollView>
+          )}
+        </View>
+      ) : (
+        // Loading
+        <View style={[styles.center, { backgroundColor: "f2f2f2" }]}>
+          <ActivityIndicator size="large" color="red" />
+        </View>
       )}
-    </View>
+    </>
   );
 };
 
