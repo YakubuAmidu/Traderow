@@ -37,8 +37,6 @@ function MyStack() {
   );
 }
 
-function UserNavigator() {
+export default function UserNavigator() {
   return <MyStack />;
 }
-
-export default UserNavigator;

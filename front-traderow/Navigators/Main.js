@@ -6,6 +6,7 @@ import { View } from "react-native";
 // Stacks
 import HomeNavigator from "./HomeNavigator";
 import CartNavigator from "./CartNavigator";
+import UserNavigator from "./UserNavigator";
 
 import CartIcon from "../Shared/CartIcon";
 
@@ -61,7 +62,7 @@ const Main = () => {
 
       <Tab.Screen
         name="User"
-        component={HomeNavigator}
+        component={UserNavigator}
         options={{
           tabBarOptions: ({ color }) => {
             <Icon name="user" size={30} color={color} />;
