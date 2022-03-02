@@ -6,6 +6,20 @@ import Input from "../../Shared/Form/Input";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = () => {
+    let user = {
+      email,
+      password,
+    };
+
+    if (email === "" || password === "") {
+      console.log("Please fill in your credentials...😔");
+    } else {
+      console.log("Success...👍");
+    }
+  };
 
   return (
     <FormContainer title={"Login"}>
