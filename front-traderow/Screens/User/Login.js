@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import FormContainer from "../../Shared/Form/FormContainer";
+import Error from "../../Shared/Error";
 import Input from "../../Shared/Form/Input";
 
 const Login = () => {
@@ -40,6 +41,7 @@ const Login = () => {
         onChangeText={(text) => setPassword(text)}
       />
       <View style={styles.buttonGroup}>
+        {error ? <Error message={error} /> : null}
         <Button title="Login" />
       </View>
 
