@@ -7,12 +7,16 @@ import { View } from "react-native";
 import HomeNavigator from "./HomeNavigator";
 import CartNavigator from "./CartNavigator";
 import UserNavigator from "./UserNavigator";
+import AdminNavigator from "./AdminNavigator";
 
 import CartIcon from "../Shared/CartIcon";
+import AuthGlobal from "../Context/Store/AuthGlobal";
 
 const Tab = createBottomTabNavigator();
 
 const Main = () => {
+  const context = useContext(AuthGlobal);
+
   return (
     <Tab.Navigator
       initialRouteName="Home"
@@ -50,15 +54,17 @@ const Main = () => {
         }}
       />
 
-      <Tab.Screen
-        name="Admin"
-        component={HomeNavigator}
-        options={{
-          tabBarOptions: ({ color }) => {
-            <Icon name="cog" size={30} color={color} />;
-          },
-        }}
-      />
+      {context.stateUser.user.isAdmin === true ? (
+        <Tab.Screen
+          name="Admin"
+          component={AdminNavigator}
+          options={{
+            tabBarOptions: ({ color }) => {
+              <Icon name="cog" size={30} color={color} />;
+            },
+          }}
+        />
+      ) : null}
 
       <Tab.Screen
         name="User"
