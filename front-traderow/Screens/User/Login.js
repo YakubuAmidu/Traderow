@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 import FormContainer from "../../Shared/Form/FormContainer";
 import Error from "../../Shared/Error";
 import Input from "../../Shared/Form/Input";
 
+// Context
+import AuthGlobal from "../../Context/Store/AuthGlobal";
+import { loginUser } from "../../Context/Actions/Auth.actions";
+
 const Login = () => {
+  const context = useContext(AuthGlobal);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (context.stateUser.isAuthenticated === true) {
+      props.navigation.navigate("User Profile");
+    }
+  }, [context.stateUser.isAuthenticated]);
 
   const handleSubmit = () => {
     let user = {
@@ -18,7 +29,7 @@ const Login = () => {
     if (email === "" || password === "") {
       console.log("Please fill in your credentials...😔");
     } else {
-      console.log("Success...👍");
+      loginUser(user, context.dispatch);
     }
   };
 
@@ -42,7 +53,7 @@ const Login = () => {
       />
       <View style={styles.buttonGroup}>
         {error ? <Error message={error} /> : null}
-        <Button title="Login" />
+        <Button title="Login" onPress={handleSubmit} />
       </View>
 
       <View style={[{ marginTop: 40 }, styles.buttonGroup]}>
