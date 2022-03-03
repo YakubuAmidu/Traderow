@@ -19,9 +19,10 @@ export const loginUser = (user, dispatch) => {
       if (data) {
         const token = data.token;
         AsyncStorage.setItem("jwt", token);
-        dispatch(); //TODO
+        const decoded = jwt_decode(token);
+        dispatch(setCurrentUser(decoded, user));
       } else {
-        // TODO
+        logoutUser(dispatch);
       }
     })
     .catch((err) => {
@@ -31,6 +32,34 @@ export const loginUser = (user, dispatch) => {
         text1: "Please provide the correct credentials...😔",
         text2: "",
       });
-      //
+      // TODO
     });
+};
+
+export const getUserProfile = (id) => {
+  fetch(`${baseURL}users/${id}`, {
+    method: "GET",
+    body: JSON.stringify(user),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    });
+};
+
+export const logoutUser = (dispatch) => {
+  AsyncStorage.removeItem("jwt");
+  dispatch(setCurrentUser({}));
+};
+
+export const setCurrentUser = (decoded, user) => {
+  return {
+    type: SET_CURRENT_USER,
+    payload: decoded,
+    userProfile: user,
+  };
 };
