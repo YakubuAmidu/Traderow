@@ -16,7 +16,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 var { height, width } = Dimensions.get("window");
 
-const Products = (propw) => {
+const Products = (props) => {
   const [productList, setProductList] = useState();
   const [productFilter, setProductFilter] = useState();
   const [loading, setLoading] = useState(true);
