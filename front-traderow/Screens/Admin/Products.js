@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { Header, Icon, Input } from "native-base";
 import { useFocusEffect } from "@react-navigation/native";
+import ListItem from './ListItem';
 
 import axios from "axios";
 import baseURL from "../../assets/common/baseUrl";
@@ -61,7 +62,11 @@ const Products = (props) => {
               <FlatList
                data={productFilter}
                renderItem={({ item, index }) => (
-                   <Text>{item.name}</Text>
+                   <ListItem 
+                     {...item}
+                     navigation={props.navigation}
+                     index={index}
+                   />
                )}
                keyExtractor={(item) => item.id}
               />

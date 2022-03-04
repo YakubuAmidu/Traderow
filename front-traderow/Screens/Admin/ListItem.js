@@ -17,7 +17,13 @@ const ListItem = (props) => {
   return (
     <View>
       <TouchableOpacity
-      // onPress
+        // onPress
+        style={[
+          styles.container,
+          {
+            backgroundColor: props.index % 2 == 0 ? "white" : "gainsboro",
+          },
+        ]}
       >
         <Image
           source={{
@@ -26,19 +32,39 @@ const ListItem = (props) => {
               : "https://cdn.pixabay.com/photo/2012/04/01/17/29/box-23649_960_720.png",
           }}
           resizeMode="contain"
+          style={styles.image}
         />
 
-        <Text>{props.brand}</Text>
-        <Text numberOfLines={1} ellipsizeMode="tail">
+        <Text style={styles.item}>{props.brand}</Text>
+        <Text style={styles.item} numberOfLines={1} ellipsizeMode="tail">
           {props.name}
         </Text>
-        <Text numberOfLines={1} ellipsizeMode="tail">
+        <Text style={styles.item} numberOfLines={1} ellipsizeMode="tail">
           {props.category.name}
         </Text>
-        <Text>$ {props.price}</Text>
+        <Text style={styles.item}>$ {props.price}</Text>
       </TouchableOpacity>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    padding: 5,
+    width: width,
+  },
+  image: {
+    borderRadius: 50,
+    width: width / 6,
+    heigtht: 20,
+    margin: 20,
+  },
+  item: {
+    flexWrap: "wrap",
+    margin: 3,
+    width: width / 6,
+  },
+});
 
 export default ListItem;
