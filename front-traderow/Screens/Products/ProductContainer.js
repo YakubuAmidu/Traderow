@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
   Dimensions,
 } from "react-native";
-import { useFocusEffect } from "react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import baseURL from "../../assets/common/baseUrl";
 import axios from "axios";
 
