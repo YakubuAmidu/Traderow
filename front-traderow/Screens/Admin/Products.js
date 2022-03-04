@@ -17,6 +17,29 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 var { height, width } = Dimensions.get("window");
 
+const ListHeader = () => {
+    return (
+        <View
+        elevation={1}
+        style={styles.listHeader}
+        >
+            <View style={styles.headerItem}></View>
+            <View style={styles.headerItem}>
+                <Text style={{ fontWeight: '600' }}>Brand</Text>
+            </View>
+            <View style={styles.headerItem}>
+                <Text style={{ fontWeight: '600' }}>Name</Text>
+            </View>
+            <View style={styles.headerItem}>
+                <Text style={{ fontWeight: '600' }}>Category</Text>
+            </View>
+            <View style={styles.headerItem}>
+                <Text style={{ fontWeight: '600' }}>Price</Text>
+            </View>
+        </View>
+    )
+}
+
 const Products = (props) => {
   const [productList, setProductList] = useState();
   const [productFilter, setProductFilter] = useState();
@@ -55,12 +78,13 @@ const Products = (props) => {
 
       {
           loading ? (
-              <View>
+              <View style={styles.spinner}>
                   <ActivityIndicator size="large" color="red" />
               </View>
           ) : (
               <FlatList
                data={productFilter}
+               ListHeaderComponent={ListHeader}
                renderItem={({ item, index }) => (
                    <ListItem 
                      {...item}
@@ -75,5 +99,22 @@ const Products = (props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+    listHeader: {
+        flexDirection: 'row',
+        padding: 5,
+        backgroundColor: 'gainsboro'
+    },
+    headerItem: {
+        margin: 3,
+        width: width / 6
+    },
+    spinner: {
+        height: height / 2,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
 
 export default Products;
