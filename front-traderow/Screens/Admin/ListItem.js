@@ -27,8 +27,8 @@ const ListItem = (props) => {
           setModalVisible(false);
         }}
       >
-        <View>
-          <View>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
             <TouchableHightlight
               underLayColor="#e8e8e8"
               onPress={() => setModalVisible(false)}
@@ -58,7 +58,10 @@ const ListItem = (props) => {
         </View>
       </Modal>
       <TouchableOpacity
-        // onPress
+        onPress={() =>
+          props.navigation.navigate("Product Detail", { item: props })
+        }
+        onLongPress={() => setModalVisible(true)}
         style={[
           styles.container,
           {
@@ -105,6 +108,27 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     margin: 3,
     width: width / 6,
+  },
+  centeredView: {
+    flex: 1,
+    alignItem: "center",
+    justifyContent: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
