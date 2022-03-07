@@ -43,7 +43,14 @@ const ListItem = (props) => {
               <Icon name="close" size={20} />
             </TouchableOpacity>
 
-            <EasyButton medium secondary>
+            <EasyButton
+              medium
+              secondary
+              onPress={() => [
+                props.navigation.navigate("ProductForm", { item: props }),
+                setModalVisible(false),
+              ]}
+            >
               <Text style={styles.textStyle}>Edit</Text>
             </EasyButton>
 
