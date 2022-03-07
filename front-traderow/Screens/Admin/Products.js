@@ -88,15 +88,15 @@ const Products = (props) => {
   };
 
   return (
-    <View>
-      <View>
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
         <EasyButton
           secondary
           medium
           onPress={() => navigation.navigate("Orders")}
         >
           <Icon name="shopping-bag" size={18} color="white" />
-          <Text>Orders</Text>
+          <Text style={styles.buttonText}>Orders</Text>
         </EasyButton>
 
         <EasyButton
@@ -105,7 +105,7 @@ const Products = (props) => {
           onPress={() => navigation.navigate("ProductForm")}
         >
           <Icon name="plus" size={18} color="white" />
-          <Text>Product Form</Text>
+          <Text style={styles.buttonText}>Product Form</Text>
         </EasyButton>
 
         <EasyButton
@@ -114,7 +114,7 @@ const Products = (props) => {
           onPress={() => navigation.navigate("Category")}
         >
           <Icon name="plus" size={18} color="white" />
-          <Text>Categories</Text>
+          <Text style={styles.buttonText}>Categories</Text>
         </EasyButton>
       </View>
       <View>
@@ -166,6 +166,19 @@ const styles = StyleSheet.create({
     height: height / 2,
     alignItems: "center",
     justifyContent: "center",
+  },
+  container: {
+    marginBottom: 160,
+    backgroundColor: "white",
+  },
+  buttonContainer: {
+    margin: 20,
+    alignSelf: "center",
+    flexDirection: "row",
+  },
+  buttonText: {
+    marginLeft: 4,
+    color: "white",
   },
 });
 
