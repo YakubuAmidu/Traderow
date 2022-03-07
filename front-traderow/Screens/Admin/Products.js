@@ -14,6 +14,7 @@ import ListItem from "./ListItem";
 import axios from "axios";
 import baseURL from "../../assets/common/baseUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import EasyButton from "../../Shared/StyledComponents/EasyButton";
 
 var { height, width } = Dimensions.get("window");
 
@@ -88,6 +89,34 @@ const Products = (props) => {
 
   return (
     <View>
+      <View>
+        <EasyButton
+          secondary
+          medium
+          onPress={() => navigation.navigate("Orders")}
+        >
+          <Icon name="shopping-bag" size={18} color="white" />
+          <Text>Orders</Text>
+        </EasyButton>
+
+        <EasyButton
+          secondary
+          medium
+          onPress={() => navigation.navigate("ProductForm")}
+        >
+          <Icon name="plus" size={18} color="white" />
+          <Text>Product Form</Text>
+        </EasyButton>
+
+        <EasyButton
+          secondary
+          medium
+          onPress={() => navigation.navigate("Category")}
+        >
+          <Icon name="plus" size={18} color="white" />
+          <Text>Categories</Text>
+        </EasyButton>
+      </View>
       <View>
         <Header searchBar rounded>
           <Item style={{ padding: 5 }}>
