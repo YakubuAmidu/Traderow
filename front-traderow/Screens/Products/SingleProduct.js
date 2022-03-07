@@ -9,10 +9,30 @@ import {
 } from "react-native";
 import { Container, H1, Left, Right } from "native-base";
 import EasyButton from "../../Shared/StyledComponents/EasyButton";
+import TrafficLight from "../../Shared/StyledComponents/TrafficLight";
 
 const SingleProduct = (props) => {
   const [item, setItem] = useState(props.route.params.item);
-  const [availability, setAvailability] = useState("");
+  const [availability, setAvailability] = useState(null);
+  const [availabilityText, setAvailabilityText] = useState("");
+
+  useEffect(() => {
+    if (props.route.params.item.countInStock == 0) {
+      setAvailability(<TrafficLight unavailable></TrafficLight>);
+      setAvailabilityText("Unavailable...😔");
+    } else if (props.route.params.item.countInStock <= 5) {
+      setAvailability(<TrafficLight limited></TrafficLight>);
+      setAvailabilityText("Limited...✋");
+    } else {
+      setAvailability(<TrafficLight available></TrafficLight>);
+      setAvailabilityText("available...👍");
+    }
+
+    return () => {
+      setAvailability(null);
+      setAvailabilityText("");
+    };
+  });
 
   return (
     <Container style={styles.container}>
@@ -33,7 +53,15 @@ const SingleProduct = (props) => {
           <H1 style={styles.contentHeader}>{item.name}</H1>
           <Text style={styles.contentText}>{item.brand}</Text>
         </View>
-        {/* TODO: description richdescription and availability */}
+        <View style={styles.availabilityContainer}>
+          <View style={styles.availability}>
+            <Text style={{ marginRight: 10 }}>
+              Availbility: {availabilityText}
+            </Text>
+            {availability}
+          </View>
+          <Text>{item.description}</Text>
+        </View>
       </ScrollView>
 
       <View style={styles.bottomContainer}>
@@ -99,6 +127,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     margin: 20,
     color: "red",
+  },
+  availabilityContainer: {
+    marginBottom: 20,
+    alignItems: "center",
+  },
+  availability: {
+    flexDirection: "row",
+    marginBottom: 10,
   },
 });
 
