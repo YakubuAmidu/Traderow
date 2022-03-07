@@ -37,6 +37,8 @@ const ProductCard = (props) => {
       {countInStock > 0 ? (
         <View style={{ marginBottom: 60 }}>
           <EasyButton
+            primaary
+            medium
             onPress={() => {
               props.addItemToCart(props),
                 Toast.show({

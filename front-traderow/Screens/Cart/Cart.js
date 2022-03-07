@@ -18,6 +18,7 @@ import { SwipeLisView } from "react-native-list-view";
 import CartItem from "./CartItem";
 
 import Icon from "react-native-vector-icons/FontAwesome";
+import EasyButton from "../../Shared/StyledComponents/EasyButton";
 
 import { connect } from "react-redux";
 import * as actions from "../../Redux/Actions/CartActions";
@@ -66,14 +67,19 @@ const Cart = (props) => {
             </Left>
 
             <Right>
-              <Button title="Clear" onPress={() => props.clearCart()} />
+              <EasyButton danger medium onPress={() => props.clearCart()}>
+                <Text style={{ color: "white" }}>Clear</Text>
+              </EasyButton>
             </Right>
 
             <Right>
               <Button
-                title="Checkout"
+                primary
+                medium
                 onPress={() => props.navigation.navigate("Checkout")}
-              />
+              >
+                <Text style={{ color: "white" }}>Checkout</Text>
+              </Button>
             </Right>
           </View>
         </Container>

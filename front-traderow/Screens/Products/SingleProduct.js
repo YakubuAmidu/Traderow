@@ -8,6 +8,7 @@ import {
   Button,
 } from "react-native";
 import { Container, H1, Left, Right } from "native-base";
+import EasyButton from "../../Shared/StyledComponents/EasyButton";
 
 const SingleProduct = (props) => {
   const [item, setItem] = useState(props.route.params.item);
@@ -38,8 +39,9 @@ const SingleProduct = (props) => {
       <View style={styles.bottomContainer}>
         <Left style={styles.price}>$ {item.price}</Left>
         <Right>
-          <Button
-            title="Add"
+          <EasyButton
+            primary
+            medium
             onPress={() => {
               props.addItemToCart(item),
                 Toast.show({
@@ -49,7 +51,9 @@ const SingleProduct = (props) => {
                   text2: "Go to your cart to complete your order...👍",
                 });
             }}
-          />
+          >
+            <Text style={{ color: "white" }}>Add</Text>
+          </EasyButton>
         </Right>
       </View>
     </Container>
