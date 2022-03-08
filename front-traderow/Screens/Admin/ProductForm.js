@@ -88,6 +88,34 @@ const ProductsForm = (props) => {
         value={countInStock}
         onChangeText={(text) => SetCountInStock(text)}
       />
+
+      <View style={styles.label}>
+        <Text style={{ textDecoration: "underline" }}>Description</Text>
+      </View>
+      <Input
+        placeholder="Description"
+        name="description"
+        id="description"
+        value={description}
+        onChangeText={(text) => setDescription(text)}
+      />
+
+      <Item picker>
+        <Picker
+          mode="dropdown"
+          iosIcon={<Icon color="#007aff" name="arrow-down" />}
+          placeholder="Select your category"
+          selectValue={pickerValue}
+          placeholderStyle={{ color: "#007aff" }}
+          placeholderIconColor="#00faff"
+          onValueChange={(e) => [setPickerValue(e), setCategory(e)]}
+          style={{ width: undefined }}
+        >
+          {categories.map((c) => {
+            return <Picker.Item key={c.id} label={c.name} value={c.id} />;
+          })}
+        </Picker>
+      </Item>
     </FormContainer>
   );
 };
