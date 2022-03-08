@@ -35,10 +35,68 @@ const ProductsForm = (props) => {
   const [isFeatured, setIsFeatured] = useState(false);
 
   return (
-    <View>
-      <Text>Product Form</Text>
-    </View>
+    <FormContainer title="Add Product">
+      <View>
+        <Image source={{ uri: mainImage }} />
+        <TouchableOpacity>
+          <Text>Image</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.label}>
+        <Text style={{ textDecoration: "underline" }}>Brand</Text>
+      </View>
+      <Input
+        placeholder="Brand"
+        id="brand"
+        value={brand}
+        name="brand"
+        onChangeText={(text) => setBrand(text)}
+      />
+
+      <View style={styles.label}>
+        <Text style={{ textDecoration: "underline" }}>Name</Text>
+      </View>
+      <Input
+        placeholder="Name"
+        id="name"
+        name="name"
+        value={name}
+        onChangeText={(text) => setName(text)}
+      />
+
+      <View style={styles.label}>
+        <Text style={{ textDecoration: "underline" }}>Price</Text>
+      </View>
+      <Input
+        placeholder="Price"
+        name="price"
+        id="price"
+        keyboardType={"numeric"}
+        value={price}
+        onChangeText={(text) => setPrice(text)}
+      />
+
+      <View style={styles.label}>
+        <Text style={{ textDecoration: "underline" }}>Count in stock</Text>
+      </View>
+      <Input
+        placeholder="Stock"
+        id="stock"
+        name="stock"
+        keyboardType={"numeric"}
+        value={countInStock}
+        onChangeText={(text) => SetCountInStock(text)}
+      />
+    </FormContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  label: {
+    width: "80%",
+    marginTop: 10,
+  },
+});
 
 export default ProductsForm;
