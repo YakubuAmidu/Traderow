@@ -17,6 +17,7 @@ import Toast from "react-native-toast-message";
 import AsyncStorage from "react-native-community/async-storage";
 import baseURL from "../../assets/common/baseUrl";
 import axios from "axios";
+import * as ImagePicker from "expo-image-picker";
 
 const ProductsForm = (props) => {
   const [pickerValue, setPickerValue] = useState();
@@ -34,12 +35,49 @@ const ProductsForm = (props) => {
   const [rating, setRating] = useState();
   const [isFeatured, setIsFeatured] = useState(false);
 
+  useEffect(() => {
+    // Categories
+    axios
+      .get(`${baseURL}categories`)
+      .then((res) => setCategories(res.data))
+      .catch((err) => alert("Error to load categoris...🦠"));
+
+    // Image picker
+    ((async) => {
+      if (Platform.OS !== "web") {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permission to make this work...😉");
+        }
+      }
+    })();
+
+    return () => {
+      setCategories([]);
+    };
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setMainImage(result.uri);
+      setImage(result.uri);
+    }
+  };
+
   return (
     <FormContainer title="Add Product">
-      <View>
-        <Image source={{ uri: mainImage }} />
-        <TouchableOpacity>
-          <Text>Image</Text>
+      <View style={styles.imageContainer}>
+        <Image style={styles.image} source={{ uri: mainImage }} />
+        <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
+          <Icon style={{ color: "white" }} name="camera" />
         </TouchableOpacity>
       </View>
 
@@ -116,6 +154,12 @@ const ProductsForm = (props) => {
           })}
         </Picker>
       </Item>
+      {err ? <Error message={err} /> : null}
+      <View style={style.buttonContainer}>
+        <EasyButton large primary>
+          <Text style={styles.buttonText}>Confirm</Text>
+        </EasyButton>
+      </View>
     </FormContainer>
   );
 };
@@ -124,6 +168,40 @@ const styles = StyleSheet.create({
   label: {
     width: "80%",
     marginTop: 10,
+  },
+  buttonContainer: {
+    width: "80%",
+    marginBottom: 80,
+    marginTop: 20,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
+  },
+  imageContainer: {
+    width: 200,
+    height: 200,
+    borderStyle: "solid",
+    borderWidth: 8,
+    padding: 0,
+    justifyContent: "center",
+    borderRadius: 100,
+    borderColor: "#e0e0e0",
+    elevation: 10,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 100,
+  },
+  imagePicker: {
+    position: "absolute",
+    right: 5,
+    bottom: 5,
+    backgroundColor: "grey",
+    padding: 8,
+    borderRadius: 100,
+    elevation: 20,
   },
 });
 
