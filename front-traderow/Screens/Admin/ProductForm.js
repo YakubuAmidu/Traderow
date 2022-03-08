@@ -16,6 +16,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Toast from "react-native-toast-message";
 import AsyncStorage from "react-native-community/async-storage";
 import baseURL from "../../assets/common/baseUrl";
+import mime from "mime";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
 
@@ -25,6 +26,7 @@ const ProductsForm = (props) => {
   const [name, setName] = useState();
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
+  const [richDescription, setRichDescription] = useState();
   const [image, setImage] = useState();
   const [mainImage, setMainImage] = useState();
   const [category, setCategory] = useState();
@@ -32,10 +34,17 @@ const ProductsForm = (props) => {
   const [token, setToken] = useState();
   const [error, setError] = useState();
   const [countInStock, SetCountInStock] = useState();
-  const [rating, setRating] = useState();
+  const [numReviews, setNumReviews] = useState(0);
+  const [rating, setRating] = useState(0);
   const [isFeatured, setIsFeatured] = useState(false);
 
   useEffect(() => {
+    AsyncStorage.getItem("jwt")
+      .then((res) => {
+        setToken(res);
+      })
+      .catch((error) => console.log(error));
+
     // Categories
     axios
       .get(`${baseURL}categories`)
@@ -70,6 +79,70 @@ const ProductsForm = (props) => {
       setMainImage(result.uri);
       setImage(result.uri);
     }
+  };
+
+  const addProduct = () => {
+    if (
+      name == "" ||
+      brand == "" ||
+      price == "" ||
+      description == "" ||
+      category == "" ||
+      countInStock == ""
+    ) {
+      setError("Please fill the form correctly...😔");
+    }
+
+    let formData = new FormData();
+
+    const newImageUri = "file:///" + image.split("file:/").join("");
+
+    formData.append("image", {
+      uri: newImageUri,
+      type: mime.getType(newImageUri),
+      name: newImageUri.split("/").pop(),
+    });
+    formData.append("name", name);
+    formData.append("brand", brand);
+    formData.append("price", price);
+    formData.append("descriptioin", description);
+    formData.append("category", category);
+    formData.append("richDescription", richDescription);
+    formData.append("rating", rating);
+    formData.append("numReviews", numReviews);
+    formData.append("isFeatured", isFeatured);
+
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .post(`${baseURL}products`, formData, config)
+      .then((res) => {
+        if (res.status == 200 || res.status == 201) {
+          Toast.show({
+            topOffset: 60,
+            type: "success",
+            text1: "New product added...👍",
+            text2: "",
+          });
+
+          setTimeout(() => {
+            props.navigation.navigate("Products");
+          }, 500);
+        }
+      })
+      .catch((error) => {
+        Toast.show({
+          topOffset: 60,
+          type: "failed...🚫",
+          text1: "Something went wrong...🚫",
+          text2: "Please again...☺️",
+        });
+      });
   };
 
   return (
@@ -154,9 +227,9 @@ const ProductsForm = (props) => {
           })}
         </Picker>
       </Item>
-      {err ? <Error message={err} /> : null}
+      {error ? <Error message={err} /> : null}
       <View style={style.buttonContainer}>
-        <EasyButton large primary>
+        <EasyButton large primary onPress={() => addProduct()}>
           <Text style={styles.buttonText}>Confirm</Text>
         </EasyButton>
       </View>
