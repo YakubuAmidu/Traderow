@@ -19,6 +19,7 @@ import baseURL from "../../assets/common/baseUrl";
 import mime from "mime";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";
+import { FunctionSelectItem } from "native-base/lib/typescript/components/composites/Typeahead/useTypeahead/types";
 
 const ProductsForm = (props) => {
   const [pickerValue, setPickerValue] = useState();
@@ -33,12 +34,26 @@ const ProductsForm = (props) => {
   const [categories, setCategories] = useState([]);
   const [token, setToken] = useState();
   const [error, setError] = useState();
-  const [countInStock, SetCountInStock] = useState();
+  const [countInStock, setCountInStock] = useState();
   const [numReviews, setNumReviews] = useState(0);
   const [rating, setRating] = useState(0);
   const [isFeatured, setIsFeatured] = useState(false);
 
   useEffect(() => {
+    if (!props.route.params) {
+      setItem(null);
+    } else {
+      setItem(props.route.params.item);
+      setBrand(props.route.params.brand);
+      setName(props.route.params.name);
+      setPrice(props.route.params.price.toString());
+      setDescription(props.route.params.description);
+      setMainImage(props.route.params.image);
+      setImage(props.route.params.image);
+      setCategory(props.route.params.category._id);
+      setCountInStock(props.route.params.countInStock.toString());
+    }
+
     AsyncStorage.getItem("jwt")
       .then((res) => {
         setToken(res);
@@ -119,30 +134,57 @@ const ProductsForm = (props) => {
       },
     };
 
-    axios
-      .post(`${baseURL}products`, formData, config)
-      .then((res) => {
-        if (res.status == 200 || res.status == 201) {
+    if (item !== null) {
+      axios
+        .put(`${baseURL}products/${item.id}`, formData, config)
+        .then((res) => {
+          if (res.status == 200 || res.status == 201) {
+            Toast.show({
+              topOffset: 60,
+              type: "success",
+              text1: "Product successfully updated...☺️",
+              text2: "",
+            });
+
+            setTimeout(() => {
+              props.navigation.navigate("Product");
+            }, 500);
+          }
+        })
+        .catch((error) => {
           Toast.show({
             topOffset: 60,
-            type: "success",
-            text1: "New product added...👍",
-            text2: "",
+            type: "Error",
+            text1: "Something went wrong...🚫",
+            text2: "Please try again...😉",
           });
-
-          setTimeout(() => {
-            props.navigation.navigate("Products");
-          }, 500);
-        }
-      })
-      .catch((error) => {
-        Toast.show({
-          topOffset: 60,
-          type: "failed...🚫",
-          text1: "Something went wrong...🚫",
-          text2: "Please again...☺️",
         });
-      });
+    } else {
+      axios
+        .post(`${baseURL}products`, formData, config)
+        .then((res) => {
+          if (res.status == 200 || res.status == 201) {
+            Toast.show({
+              topOffset: 60,
+              type: "success",
+              text1: "New product added...👍",
+              text2: "",
+            });
+
+            setTimeout(() => {
+              props.navigation.navigate("Products");
+            }, 500);
+          }
+        })
+        .catch((error) => {
+          Toast.show({
+            topOffset: 60,
+            type: "Error...🚫",
+            text1: "Something went wrong...🚫",
+            text2: "Please try again...☺️",
+          });
+        });
+    }
   };
 
   return (
