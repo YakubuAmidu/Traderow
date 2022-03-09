@@ -18,7 +18,7 @@ const Item = (props) => {
   return (
     <View style={styles.item}>
       <Text>{props.item.name}</Text>
-      <EasyButton medium danger>
+      <EasyButton medium danger onPress={() => props.delete(props.item._id)}>
         <Text style={{ color: "white", fontWeight: "bold" }}>Delete</Text>
       </EasyButton>
     </View>
@@ -46,12 +46,49 @@ const Categories = (props) => {
     };
   }, []);
 
+  const addCategory = () => {
+    const category = {
+      name: categoryName,
+    };
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .post(`${baseURL}categories`, category, config)
+      .then((res) => setCategories([...categories, res.data]))
+      .catch((error) => alert("Error to load category..."));
+
+    setCategoryName("");
+  };
+
+  const deleteCategory = (id) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    axios
+      .delete(`${baseURL}categories/${id}`, config)
+      .then((res) => {
+        const newCategories = categories.filter((item) => item.id !== id);
+        setCategories(newCategories);
+      })
+      .catch((error) => alert("Error to load category..."));
+  };
+
   return (
     <View style={{ position: "relative", height: "100%" }}>
       <View style={{ marginBottom: 60 }}>
         <FlatList
           data={categories}
-          renderItem={({ item, index }) => <Item item={item} index={index} />}
+          renderItem={({ item, index }) => (
+            <Item item={item} index={index} delete={deleteCategory} />
+          )}
           keyExtractor={(item) => item.id}
         />
       </View>
@@ -70,7 +107,7 @@ const Categories = (props) => {
         </View>
 
         <View>
-          <EasyButton medium primary>
+          <EasyButton medium primary onPress={() => addCategory()}>
             <Text style={{ color: "white", fontWeight: "bold" }}>Submit</Text>
           </EasyButton>
         </View>
