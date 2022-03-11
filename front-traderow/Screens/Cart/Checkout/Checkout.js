@@ -37,6 +37,9 @@ const Checkout = (props) => {
       address1: address,
       address2: address2,
       dateOrdered: Date.now(),
+      status: "3",
+      user,
+      zip,
     };
 
     props.navigation.navigate("Payment", { order: order });

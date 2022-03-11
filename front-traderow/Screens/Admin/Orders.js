@@ -4,6 +4,8 @@ import baseURL from "../../assets/common/baseUrl";
 import axios from "axios";
 import { useFocusEffect } from "@react-navigation/native";
 
+import OrderCard from "../../Shared/OrderCard";
+
 const Orders = (props) => {
   const [orderListis, setOrderList] = useState();
 
@@ -29,7 +31,7 @@ const Orders = (props) => {
       <FlatList
         data={orderListis}
         renderItem={({ item }) => {
-          <Text>{item.shippingAddress1}</Text>;
+          <OrderCard navigation={props.navigation} {...item} />;
         }}
         keyExtractor={(item) => item.id}
       />
