@@ -14,6 +14,12 @@ import {
   setStatusBarTranslucent,
 } from "expo-status-bar";
 
+const codes = [
+  { name: "Pending", code: "3" },
+  { name: "Shipped", code: "2" },
+  { name: "Delivered", code: "1" },
+];
+
 const OrderCard = (props) => {
   const [orderStatus, setOrderStatus] = useState();
   const [orderStatusText, setOrderStatusText] = useState();
@@ -62,6 +68,27 @@ const OrderCard = (props) => {
           <Text>Price:</Text>
           <Text style={styles.price}>$ {props.totalPrice}</Text>
         </View>
+        <Picker
+          mode="dropdown"
+          iosIcon={<Icon color={"#00faff"} name="arrow-down" />}
+          style={{ width: undefined }}
+          selectedValue={statusChange}
+          placeholder="Change status"
+          placeholderIconColor={{ color: "#007aff" }}
+          onValueChange={(x) => setStatusChange(x)}
+        >
+          {codes.map((c) => {
+            return <Picker value={x.code} key={c.name} label={c.name} />;
+          })}
+        </Picker>
+
+        <EasyButton
+          secondary
+          large
+          // onChange
+        >
+          <Text style={{ color: "white" }}>Update</Text>
+        </EasyButton>
       </View>
     </View>
   );
