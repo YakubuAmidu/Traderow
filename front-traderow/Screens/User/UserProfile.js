@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
 import { Container } from "native-base";
 import { useFocusEffect } from "@react-navigation/native";
 import AsynStorage from "@react-native-community/async-storage";
+import OrderCard from "../../Shared/OrderCard";
 
 import axios from "axios";
 import { baseURL } from "../../assets/common/baseUrl";
@@ -13,29 +14,42 @@ import { logoutUser } from "../../Context/Actions/Auth.actions";
 const UserProfile = () => {
   const context = useContext(AuthGlobal);
   const [userProfile, setUserProfile] = useState();
+  const [orders, setOrders] = useState();
 
-  useEffect(() => {
-    if (
-      context.stateUser.isAuthenticated === false ||
-      context.stateUser.isAuthenticated === null
-    ) {
-      props.navigation.navigate("Login");
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if (
+        context.stateUser.isAuthenticated === false ||
+        context.stateUser.isAuthenticated === null
+      ) {
+        props.navigation.navigate("Login");
+      }
 
-    AsynStorage.getItem("jwt")
-      .then((res) => {
-        axios
-          .get(`${baseURL}users/${context.stateUser.user.sub}`, {
-            headers: { Authorizatin: `Bearer ${res}` },
-          })
-          .then((user) => setUserProfile(user.data));
-      })
-      .catch((err) => console.log(err));
+      AsynStorage.getItem("jwt")
+        .then((res) => {
+          axios
+            .get(`${baseURL}users/${context.stateUser.user.sub}`, {
+              headers: { Authorizatin: `Bearer ${res}` },
+            })
+            .then((user) => setUserProfile(user.data));
+        })
+        .catch((err) => console.log(err));
 
-    return () => {
-      setUserProfile();
-    };
-  }, [context.stateUser.isAuthenticated]);
+      axios.get(`${baseURL}orders`).then((x) => {
+        const data = x.data;
+        const userOrders = data.filter(
+          (order) => order.user._id === context.stateUser.user.sub
+        );
+
+        setOrders(userOrders);
+      });
+
+      return () => {
+        setUserProfile();
+        setOrders();
+      };
+    }, [context.stateUser.isAuthenticated])
+  );
 
   return (
     <Container style={styles.container}>
@@ -59,6 +73,19 @@ const UserProfile = () => {
               AsynStorage.removeItem("jwt"), logoutUser(context.dispatch);
             }}
           />
+        </View>
+
+        <View>
+          <Text style={{ fontSize: 20 }}>Your orders</Text>
+          <View>
+            {orders ? (
+              orders.map((x) => {
+                return <OrderCard key={x.id} {...x} />;
+              })
+            ) : (
+              <Text>You have no orders...</Text>
+            )}
+          </View>
         </View>
       </ScrollView>
     </Container>
