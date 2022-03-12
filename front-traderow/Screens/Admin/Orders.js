@@ -31,7 +31,7 @@ const Orders = (props) => {
       <FlatList
         data={orderListis}
         renderItem={({ item }) => {
-          <OrderCard navigation={props.navigation} {...item} />;
+          <OrderCard navigation={props.navigation} {...item} editMode={true} />;
         }}
         keyExtractor={(item) => item.id}
       />

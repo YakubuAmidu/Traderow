@@ -25,11 +25,13 @@ const OrderCard = (props) => {
   const [cardColor, setCardColor] = useState();
 
   useEffect(() => {
-    AsynStorage.getItem("jwt")
-      .then((res) => {
-        setToken(res);
-      })
-      .catch((error) => console.log(error));
+    if (props.editMode) {
+      AsynStorage.getItem("jwt")
+        .then((res) => {
+          setToken(res);
+        })
+        .catch((error) => console.log(error));
+    }
 
     if (props.status == "3") {
       setOrderStatus(<TrafficLight unavailable></TrafficLight>);
@@ -122,23 +124,28 @@ const OrderCard = (props) => {
           <Text>Price:</Text>
           <Text style={styles.price}>$ {props.totalPrice}</Text>
         </View>
-        <Picker
-          mode="dropdown"
-          iosIcon={<Icon color={"#00faff"} name="arrow-down" />}
-          style={{ width: undefined }}
-          selectedValue={statusChange}
-          placeholder="Change status"
-          placeholderIconColor={{ color: "#007aff" }}
-          onValueChange={(x) => setStatusChange(x)}
-        >
-          {codes.map((c) => {
-            return <Picker value={x.code} key={c.name} label={c.name} />;
-          })}
-        </Picker>
-
-        <EasyButton secondary large onPress={() => updateOrder()}>
-          <Text style={{ color: "white" }}>Update</Text>
-        </EasyButton>
+        <View>
+          {props.editMode ? (
+            <View>
+              <Picker
+                mode="dropdown"
+                iosIcon={<Icon color={"#00faff"} name="arrow-down" />}
+                style={{ width: undefined }}
+                selectedValue={statusChange}
+                placeholder="Change status"
+                placeholderIconColor={{ color: "#007aff" }}
+                onValueChange={(x) => setStatusChange(x)}
+              >
+                {codes.map((c) => {
+                  return <Picker value={x.code} key={c.name} label={c.name} />;
+                })}
+              </Picker>
+              <EasyButton secondary large onPress={() => updateOrder()}>
+                <Text style={{ color: "white" }}>Update</Text>
+              </EasyButton>
+            </View>
+          ) : null}
+        </View>
       </View>
     </View>
   );

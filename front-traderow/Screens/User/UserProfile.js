@@ -75,7 +75,7 @@ const UserProfile = () => {
           />
         </View>
 
-        <View>
+        <View style={styles.order}>
           <Text style={{ fontSize: 20 }}>Your orders</Text>
           <View>
             {orders ? (
@@ -83,7 +83,9 @@ const UserProfile = () => {
                 return <OrderCard key={x.id} {...x} />;
               })
             ) : (
-              <Text>You have no orders...</Text>
+              <View style={styles.order}>
+                <Text>You have no orders...</Text>
+              </View>
             )}
           </View>
         </View>
@@ -100,6 +102,11 @@ const styles = StyleSheet.create({
   subContainer: {
     alignItems: "center",
     marginTop: 60,
+  },
+  order: {
+    marginTop: 20,
+    alignItems: "center",
+    marginBottom: 60,
   },
 });
 
